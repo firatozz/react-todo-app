@@ -4,13 +4,13 @@ const app = express() // generate an app object
 const bodyParser = require("body-parser") // requiring the body-parser
 const PORT = process.env.PORT || 8080 // port that the server is running on => localhost:8080
 const db = require("./models")
-const cors = require("cors")
-const Limiter = require('express-rate-limiter');
+const cors = require("cors") // allows cross domain http request.
+const Limiter = require('express-rate-limiter'); // limiter repeated requests to public APIs and/or endpoints.
 var MemoryStore = require('express-rate-limiter/lib/memoryStore');
-const limiter = new Limiter({ db: new MemoryStore(), outerLimit: 260, innerLimit: 23 });
-const helmet = require('helmet');
-const morgan = require('morgan');
-var validator = require('validator');
+const limiter = new Limiter({ db: new MemoryStore(), outerLimit: 260, innerLimit: 23 }); 
+const helmet = require('helmet'); // secure app by setting various HTTP headers.
+const morgan = require('morgan'); // HTTP request logger middleware
+var validator = require('validator'); // provide to defend unexpected request
 
 app.use(cors())
 app.use(helmet());
