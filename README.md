@@ -26,5 +26,5 @@ formulate the routes.
 <li>DELETE  api/todos/:id =>deleting a todo with matching id </li>
 
 
-
+#### NOTICE: The client file it's has only for check client side.
 
