@@ -1,5 +1,7 @@
 # Todo-app with React, NodeJS, MongoDB
 
+<a href="https://firatoz-todo-app.herokuapp.com/" target="_blank">Live</a>
+
   - ExpressJS - is the server framework with Node JS under the hood.</h6>
   - body-parser - allows express to parse the request payload into the req.body object. More about this later.</h6>
   - mongoose - high level API for interacting with our MongoDB database.</h6>
