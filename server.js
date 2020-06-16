@@ -18,10 +18,17 @@ app.use(limiter.middleware());
 app.use(morgan('dev'));
 app.use(express.urlencoded()) // telling the app that we are going to use json to handle incoming payload
 
-function success(res, payload) {
+
+//The success function accepts the res object and the payload and send a 200 status code with the payload in the response
+function success(res, payload) { 
     return res.status(200).json(payload);
 }
 
+
+/*
+getting all the todos. app.get() tells express that the route "/todos" is a get route. 
+The second paramater async (req,res,next)=>{ codes... } is the function that gets called when the server receives this request.
+*/
 app.get("/api/todos", async (req, res, next) => {
     try {
         const todos = await db.Todo.find({})
@@ -35,7 +42,7 @@ app.get("/api/todos", async (req, res, next) => {
 });
 
 
-
+// accepts an id and getting specific todo.
 app.get("/api/todos/:id", async (req, res, next) => {
     if(validator.isMongoId(req.params.id)){
     try {
@@ -56,6 +63,13 @@ else {
 }
 });
 
+
+/*
+updating a todo with the given id we update the todo by calling await db.Todo.findByIdAndUpdate(req.params.id, req.body, {new:true}). 
+req.params contains all the route parameters that we specified.
+req.body contains the new information that we want to update the task with. 
+The last parameter {new:true} tells mongoose that we want the updated task to be returned.
+*/
 app.put("/api/todos/:id",async (req, res, next) => {
     if(validator.isMongoId(req.params.id)){
     try {
@@ -83,6 +97,9 @@ else {
 });
 
 
+/*creating a new todo we called await db.Todo.create(req.body) to create a new todo. 
+req.body contains the request payload that will contain the task to be created.
+*/
 app.post("/api/todos/",async (req, res, next) => {
     if( validator.isLength(req.body.task,{min:1, max: 80}) && validator.isBoolean(req.body.completed) ){
     try {
@@ -108,6 +125,7 @@ else {
 });
 
 
+// deleting a todo with the given id we call await db.Todo.findByIdAndRemove(req.params.id)
 app.delete("/api/todos/:id", async (req, res, next) => {
     if(validator.isMongoId(req.params.id)){
     try {
@@ -128,6 +146,8 @@ app.delete("/api/todos/:id", async (req, res, next) => {
     }
 });
 
+
+//This is our error handler. Whenever we call next({status: 400, message: "failed to do something"}), we are passing the error object to the error handler.
 app.use((err, req, res, next) => {
     return res.status(err.status || 400).json({
         status: err.status || 400,
@@ -135,10 +155,12 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.use(express.static(path.join(__dirname, 'build')));
 
 
-app.get('/*', (req, res) => {
+app.use(express.static(path.join(__dirname, 'build'))); // serves all our static files from the build directory.
+
+
+app.get('/*', (req, res) => { // this is to keep our client side routing functional. This code essentially serves the index.html file on any unknown routes.
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
